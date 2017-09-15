@@ -22,19 +22,19 @@ flags:
 dependencies:
   # Prelude
   - base >= 4.7 && < 5
-  - protolude
+  - protolude >= 0.2
 
   # Data Structures
-  - containers
+  - containers >= 0.5
 
   # Text
-  - text
-  - bytestring
+  - text >= 1.2
+  - bytestring >= 0.10
   - mtl >= 2.2
   
   # Cryptograhy
   - cryptonite >= 0.21
-  - memory
+  - memory >= 0.14
 
 library:
   source-dirs: src
@@ -90,11 +90,11 @@ tests:
     dependencies:
     - base >= 4.7 && < 5
     - pedersen-commitment
-    - protolude
+    - protolude >= 0.2
     - QuickCheck
     - tasty
     - tasty-hunit
     - tasty-quickcheck
     main: Main.hs
-    source-dirs: tests
+    source-dirs: tests, example
     other-modules: Example

@@ -38,13 +38,13 @@ library
   ghc-options: -fwarn-tabs -fwarn-incomplete-patterns -fwarn-incomplete-record-updates -fwarn-redundant-constraints -fwarn-implicit-prelude -fwarn-overflowed-literals -fwarn-orphans -fwarn-identities -fwarn-dodgy-exports -fwarn-dodgy-imports -fwarn-duplicate-exports -fwarn-overlapping-patterns -fwarn-missing-fields -fwarn-missing-methods -fwarn-missing-signatures -fwarn-noncanonical-monad-instances -fwarn-unused-pattern-binds -fwarn-unused-type-patterns -fwarn-unrecognised-pragmas -fwarn-wrong-do-bind -fno-warn-name-shadowing -fno-warn-unused-binds -fno-warn-unused-matches -fno-warn-unused-do-bind
   build-depends:
       base >= 4.7 && < 5
-    , protolude
-    , containers
-    , text
-    , bytestring
+    , protolude >= 0.2
+    , containers >= 0.5
+    , text >= 1.2
+    , bytestring >= 0.10
     , mtl >= 2.2
     , cryptonite >= 0.21
-    , memory
+    , memory >= 0.14
   if os(linux) && flag(static)
     ghc-options: -static -optl-static
   if flag(optimized)
@@ -62,19 +62,19 @@ test-suite test-suite
   type: exitcode-stdio-1.0
   main-is: Main.hs
   hs-source-dirs:
-      tests
+      tests, example
   build-depends:
       base >= 4.7 && < 5
-    , protolude
-    , containers
-    , text
-    , bytestring
+    , protolude >= 0.2
+    , containers >= 0.5
+    , text >= 1.2
+    , bytestring >= 0.10
     , mtl >= 2.2
     , cryptonite >= 0.21
-    , memory
+    , memory >= 0.14
     , base >= 4.7 && < 5
     , pedersen-commitment
-    , protolude
+    , protolude >= 0.2
     , QuickCheck
     , tasty
     , tasty-hunit
