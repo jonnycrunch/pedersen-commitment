@@ -2,14 +2,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Example (
-  micpWrapper, 
+  micpWrapper,
   micpComponents,
 
   testPedersen,
   testBlumMicaliPRNG,
 ) where
 
-import Protolude
+import Protolude hiding (hash)
 
 import Control.Concurrent.MVar
 
@@ -46,36 +46,36 @@ testPedersen bs = do
 -- Note: this example does not handle Reject messages properly.
 micpWrapper :: Int -> IO Bool
 micpWrapper nbits = do
-    
+
     -- MVars for message passing between I and R
     iMVar <- newEmptyMVar
     rMVar <- newEmptyMVar
-    -- MVars for MICP thread reporting result 
+    -- MVars for MICP thread reporting result
     iResMVar <- newEmptyMVar
-    rResMVar <- newEmptyMVar 
-   
+    rResMVar <- newEmptyMVar
+
     let aliceSecret = sha256 "123456789"
     let bobSecret = sha256 "987654321"
 
     -- Generate shared Safe Prime Field
     spf <- mkSPF nbits
-    forkIO $ void $ runSPFT spf $ -- Alice thread 
-      alice aliceSecret iMVar rMVar iResMVar 
+    forkIO $ void $ runSPFT spf $ -- Alice thread
+      alice aliceSecret iMVar rMVar iResMVar
     forkIO $ void $ runSPFT spf $ -- Bob thread
       bob bobSecret rMVar iMVar rResMVar
 
-    -- Each party should have computed each other's secret 
+    -- Each party should have computed each other's secret
     iRes <- takeMVar iResMVar
     rRes <- takeMVar rResMVar
-    
-    return $ iRes == bobSecret && rRes == aliceSecret 
-  where 
-    alice 
-      :: ByteString 
-      -> MVar IPhase 
-      -> MVar RPhase 
-      -> MVar ByteString 
-      -> SPFM IO () 
+
+    return $ iRes == bobSecret && rRes == aliceSecret
+  where
+    alice
+      :: ByteString
+      -> MVar IPhase
+      -> MVar RPhase
+      -> MVar ByteString
+      -> SPFM IO ()
     alice secret ipMVar rpMVar resMVar = do
 
       -- Phase 1
@@ -84,7 +84,7 @@ micpWrapper nbits = do
       (RPhase1 rp1msg) <- liftIO $ takeMVar rpMVar
 
       -- Phase 2
-      let ip2params = mkIPhase2Params secret rp1msg 
+      let ip2params = mkIPhase2Params secret rp1msg
       (ip2priv, ip2Msg) <- iPhase2 ip2params
       liftIO $ putMVar ipMVar $ IPhase2 ip2Msg
       (RPhase2 rp2msg) <- liftIO $ takeMVar rpMVar
@@ -102,25 +102,25 @@ micpWrapper nbits = do
       (RPhase4 rp4msg) <- liftIO $ takeMVar rpMVar
 
       -- Phase 5
-      let ip5Msg = iPhase5 ip2priv 
+      let ip5Msg = iPhase5 ip2priv
       liftIO $ putMVar ipMVar $ IPhase5 ip5Msg
 
       -- Compute bob's secret
-      let k1Map = rGetK1Map rp4msg 
+      let k1Map = rGetK1Map rp4msg
       let k2Map = rGetK2Map rp3msg
       rSecret <- micpReveal k1Map k2Map
-      
-      liftIO $ putMVar resMVar rSecret 
 
-    bob 
-      :: ByteString 
-      -> MVar RPhase 
-      -> MVar IPhase 
-      -> MVar ByteString 
+      liftIO $ putMVar resMVar rSecret
+
+    bob
+      :: ByteString
+      -> MVar RPhase
+      -> MVar IPhase
+      -> MVar ByteString
       -> SPFM IO ()
     bob secret rpMVar ipMVar resMVar = do
 
-      -- Phase 1 
+      -- Phase 1
       (IPhase1 ip1msg) <- liftIO $ takeMVar ipMVar
       let rp1params = mkRPhase1Params nbits secret ip1msg
       (rp1priv, rp1Msg) <- rPhase1 rp1params
@@ -128,15 +128,15 @@ micpWrapper nbits = do
 
       -- Phase 2
       (IPhase2 ip2msg) <- liftIO $ takeMVar ipMVar
-      let rp2params = mkRPhase2Params rp1priv ip2msg  
+      let rp2params = mkRPhase2Params rp1priv ip2msg
       rp2Msg <- rPhase2 rp2params
       liftIO $ putMVar rpMVar $ RPhase2 rp2Msg
-     
+
       -- Phase 3 (Should case match on ip3msg for IPhase3Reject)
       (IPhase3 ip3msg) <- liftIO $ takeMVar ipMVar
       case ip3msg of
         IPhase3Reject -> panic "IPhase3Reject"
-        _ -> do 
+        _ -> do
           let rp3params = mkRPhase3Params rp1priv rp1Msg rp2Msg ip1msg ip2msg ip3msg
           rp3Msg <- rPhase3 rp3params
           liftIO $ putMVar rpMVar $ RPhase3 rp3Msg
@@ -149,13 +149,13 @@ micpWrapper nbits = do
 
       -- Phase 5
       (IPhase5 ip5msg) <- liftIO $ takeMVar ipMVar
-      
-      -- Compute Alice's secret 
-      let k1Map = iGetK1Map ip5msg 
+
+      -- Compute Alice's secret
+      let k1Map = iGetK1Map ip5msg
       let k2Map = fromJust $ iGetK2Map ip4msg
       aliceSecret <- micpReveal k1Map k2Map
-      
-      liftIO $ putMVar resMVar aliceSecret 
+
+      liftIO $ putMVar resMVar aliceSecret
 
 -- | In this test, all values computed are in scope for both Alice & Bob, so
 -- instead of "sending" those values to one another, we can just use them for
@@ -273,4 +273,3 @@ micpComponents secParam = do
 
 sha256 :: ByteString -> ByteString
 sha256 bs = BA.convert (hash bs :: Digest SHA3_256)
-
