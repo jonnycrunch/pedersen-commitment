@@ -96,5 +96,5 @@ tests:
     - tasty-hunit
     - tasty-quickcheck
     main: Main.hs
-    source-dirs: tests, example
+    source-dirs: tests
     other-modules: Example

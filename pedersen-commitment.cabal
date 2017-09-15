@@ -1,4 +1,4 @@
--- This file has been generated from package.yaml by hpack version 0.17.0.
+-- This file has been generated from package.yaml by hpack version 0.18.1.
 --
 -- see: https://github.com/sol/hpack
 
@@ -62,7 +62,7 @@ test-suite test-suite
   type: exitcode-stdio-1.0
   main-is: Main.hs
   hs-source-dirs:
-      tests, example
+      tests
   build-depends:
       base >= 4.7 && < 5
     , protolude
