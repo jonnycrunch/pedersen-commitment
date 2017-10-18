@@ -26,7 +26,7 @@ suite = testGroup "Test Suite" [
       , micpTests
       ]
   ]
- 
+
 pedersenTests :: TestTree
 pedersenTests = testGroup "Pedersen Commitment Scheme"
   [ localOption (QuickCheckTests 50) $
@@ -54,20 +54,20 @@ pedersenTests = testGroup "Pedersen Commitment Scheme"
       let pz = verifyAddCommitments cp px py
       assertAddHomo $ cz == commitment pz
 
-  , testProperty "x == Open(Commit(x),r) (EC) " $ 
+  , testProperty "x == Open(Commit(x),r) (EC) " $
       monadicIO $ do
         (a,cp) <- liftIO $ ecSetup Nothing -- uses SECP256k1 by default
         x <- liftIO $ ECC.scalarGenerate $ ecCurve cp
         pc <- liftIO $ ecCommit x cp
         QM.assert $ ecOpen cp (ecCommitment pc) (ecReveal pc)
-  
+
   , testCaseSteps "Additive Homomorphic Commitments (EC) " $ \step -> do
       step "Generating commit params..."
-      (a,ecp) <- ecSetup Nothing 
+      (a,ecp) <- ecSetup Nothing
       let curve = ecCurve ecp
 
       step "Generating two random numbers in Ep (EC prime field order q)..."
-      x <- ECC.scalarGenerate curve 
+      x <- ECC.scalarGenerate curve
       y <- ECC.scalarGenerate curve
 
       step "Committing the two random numbers..."
@@ -81,7 +81,7 @@ pedersenTests = testGroup "Pedersen Commitment Scheme"
 
   , testCaseSteps "Additive Homomorphic property (EC) | nG + C(x) == (x + n)G + rH" $ \step -> do
       step "Generating commit params..."
-      (a,ecp) <- ecSetup Nothing 
+      (a,ecp) <- ecSetup Nothing
       let curve = ecCurve ecp
 
       step "Generating a random number to commit..."
@@ -91,22 +91,22 @@ pedersenTests = testGroup "Pedersen Commitment Scheme"
 
       step "Generating a random number to add to the commitment..."
       n <- ECC.scalarGenerate curve
-    
+
       step "Verifying the Additive homomorphic property"
       let cy = ecAddInteger ecp cx n
-      let py = ecVerifyAddInteger ecp px n 
-      assertAddHomo $ cy == ecCommitment py  
+      let py = ecVerifyAddInteger ecp px n
+      assertAddHomo $ cy == ecCommitment py
 
   ]
   where
-    assertAddHomo :: Bool -> IO () 
-    assertAddHomo = assertBool "Additive homomorphic property doesn't hold."  
+    assertAddHomo :: Bool -> IO ()
+    assertAddHomo = assertBool "Additive homomorphic property doesn't hold."
 
 micpTests :: TestTree
 micpTests = testGroup "Mutually Independent Commitment Protocol"
   [ testCase "Testing MICP Components" $
       assertBool "MICP Components test failed!" =<< micpComponents 256
-  , testCase "Testing MICP Wrapper" $ 
+  , testCase "Testing MICP Wrapper" $
       assertBool "MICP Wrapper test failed!" =<< micpWrapper 256
   ]
 

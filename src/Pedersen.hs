@@ -10,7 +10,7 @@ The Pedersen commitment scheme has three operations:
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Pedersen (
-  -- ** Safe Prime Field Pedersen Commitments 
+  -- ** Safe Prime Field Pedersen Commitments
   Pedersen(..),
   CommitParams(..),
   Commitment(..),
@@ -24,8 +24,8 @@ module Pedersen (
   verifyAddCommitments,
 
   verifyCommitParams,
-  
-  
+
+
   -- ** Elliptic Curve Pedersen Commitments
   ECPedersen(..),
   ECCommitParams(..),
@@ -40,7 +40,7 @@ module Pedersen (
   ecVerifyAddCommitments,
   ecAddInteger,
   ecVerifyAddInteger,
-  
+
   verifyECCommitParams
 
 ) where
@@ -173,10 +173,10 @@ data ECPedersen = ECPedersen
 -- | Setup EC Pedersen commit params, defaults to curve secp256k1
 ecSetup :: MonadRandom m => Maybe ECC.CurveName -> m (ECC.PrivateNumber, ECCommitParams)
 ecSetup mCurveName = do
-    a <- ECC.scalarGenerate curve 
+    a <- ECC.scalarGenerate curve
     let h = ECC.pointBaseMul curve a
     return (a, ECCommitParams curve h)
-  where 
+  where
     curve = case mCurveName of
       Nothing -> secp256k1
       Just cn' -> ECC.getCurveByName cn'
@@ -184,39 +184,39 @@ ecSetup mCurveName = do
 ecCommit :: MonadRandom m => Integer -> ECCommitParams -> m ECPedersen
 ecCommit x (ECCommitParams curve h) = do
   r <- ECC.scalarGenerate curve
-  let xG = ECC.pointBaseMul curve x   
+  let xG = ECC.pointBaseMul curve x
   let rH = ECC.pointMul curve r h
   let commitment = ECCommitment $ ECC.pointAdd curve xG rH
-  let reveal = ECReveal x r  
-  return $ ECPedersen commitment reveal  
-  
+  let reveal = ECReveal x r
+  return $ ECPedersen commitment reveal
+
 ecOpen :: ECCommitParams -> ECCommitment -> ECReveal -> Bool
-ecOpen (ECCommitParams curve h) (ECCommitment c) (ECReveal x r) = 
-    c == ECC.pointAdd curve xG rH 
+ecOpen (ECCommitParams curve h) (ECCommitment c) (ECReveal x r) =
+    c == ECC.pointAdd curve xG rH
   where
     xG = ECC.pointBaseMul curve x
     rH = ECC.pointMul curve r h
 
--- | In order for this resulting commitment to be opened, the commiter 
--- must construct a new set of reveal parameters. The new reveal is then 
+-- | In order for this resulting commitment to be opened, the commiter
+-- must construct a new set of reveal parameters. The new reveal is then
 -- sent to the counterparty to open the homomorphically added commitment.
-ecAddCommitments 
-  :: ECCommitParams 
-  -> ECCommitment 
-  -> ECCommitment 
+ecAddCommitments
+  :: ECCommitParams
   -> ECCommitment
-ecAddCommitments ecp (ECCommitment c1) (ECCommitment c2) = 
-  ECCommitment $ ECC.pointAdd (ecCurve ecp) c1 c2 
+  -> ECCommitment
+  -> ECCommitment
+ecAddCommitments ecp (ECCommitment c1) (ECCommitment c2) =
+  ECCommitment $ ECC.pointAdd (ecCurve ecp) c1 c2
 
--- | Verify the addition of two EC Pedersen Commitments by constructing 
+-- | Verify the addition of two EC Pedersen Commitments by constructing
 -- the new Pedersen commitment on the uncommitted values.
-ecVerifyAddCommitments 
+ecVerifyAddCommitments
   :: ECCommitParams
   -> ECPedersen
   -> ECPedersen
   -> ECPedersen
-ecVerifyAddCommitments (ECCommitParams curve h) p1 p2 = 
-    ECPedersen newCommitment newReveal 
+ecVerifyAddCommitments (ECCommitParams curve h) p1 p2 =
+    ECPedersen newCommitment newReveal
   where
     ECReveal x1 r1 = ecReveal p1
     ECReveal x2 r2 = ecReveal p2
@@ -226,32 +226,32 @@ ecVerifyAddCommitments (ECCommitParams curve h) p1 p2 =
 
     xG = ECC.pointBaseMul curve newVal
     rH = ECC.pointMul curve newScalar h
-    
+
     newCommitment = ECCommitment $ ECC.pointAdd curve xG rH
     newReveal = ECReveal newVal newScalar
 
 -- | Add an integer to the committed value. The committer should be informed
--- of the integer added to the commitment so that a valid pedersen reveal 
+-- of the integer added to the commitment so that a valid pedersen reveal
 -- can be constructed and the resulting commitment can be opened
 ecAddInteger :: ECCommitParams -> ECCommitment -> Integer -> ECCommitment
-ecAddInteger (ECCommitParams curve h) (ECCommitment c) n = 
-    ECCommitment $ ECC.pointAdd curve nG c 
+ecAddInteger (ECCommitParams curve h) (ECCommitment c) n =
+    ECCommitment $ ECC.pointAdd curve nG c
   where
-    nG = ECC.pointBaseMul curve n     
+    nG = ECC.pointBaseMul curve n
 
 ecVerifyAddInteger :: ECCommitParams -> ECPedersen -> Integer -> ECPedersen
-ecVerifyAddInteger (ECCommitParams curve h) p n = 
+ecVerifyAddInteger (ECCommitParams curve h) p n =
     ECPedersen newCommitment newReveal
   where
-    ECReveal x r = ecReveal p 
-    
-    newVal = x + n 
+    ECReveal x r = ecReveal p
+
+    newVal = x + n
 
     xG = ECC.pointBaseMul curve newVal
     rH = ECC.pointMul curve r h -- rH doesn't change
-    
-    newCommitment = ECCommitment $ ECC.pointAdd curve xG rH 
+
+    newCommitment = ECCommitment $ ECC.pointAdd curve xG rH
     newReveal = ECReveal newVal r -- r doesn't change
 
 verifyECCommitParams :: Integer -> ECCommitParams -> Bool
-verifyECCommitParams a (ECCommitParams curve h) = h == ECC.pointBaseMul curve a 
+verifyECCommitParams a (ECCommitParams curve h) = h == ECC.pointBaseMul curve a

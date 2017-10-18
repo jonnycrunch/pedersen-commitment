@@ -290,4 +290,3 @@ kpairToByte (k,k') = do
   hk <- micpBlumMicaliPRNG k
   hk' <- micpBlumMicaliPRNG k'
   return $ hk `xor` hk'
-
