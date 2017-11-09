@@ -87,6 +87,9 @@ library:
 
 tests:
   test-suite:
+    source-dirs: tests
+    main: Main.hs
+    other-modules: Example
     dependencies:
     - base >= 4.7 && < 5
     - pedersen-commitment
@@ -95,5 +98,3 @@ tests:
     - tasty
     - tasty-hunit
     - tasty-quickcheck
-    main: Main.hs
-    other-modules: Example

@@ -61,6 +61,8 @@ library
 test-suite test-suite
   type: exitcode-stdio-1.0
   main-is: Main.hs
+  hs-source-dirs:
+      tests
   build-depends:
       QuickCheck
     , base >=4.7 && <5
