@@ -46,10 +46,6 @@ library
     , mtl >=2.2
     , protolude >=0.2
     , text >=1.2
-  if os(linux) && flag(static)
-    ghc-options: -static -optl-static
-  if flag(optimized)
-    ghc-options: -threaded -rtsopts -with-rtsopts=-N -O2
   exposed-modules:
       PrimeField
       Pedersen
