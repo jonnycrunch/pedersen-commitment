@@ -1,10 +1,11 @@
 name: pedersen-commitment 
 version: 0.1.0
-synopsis: An implementation of the Mutually Independent Commitment Schemes
+synopsis: An implementation of Pedersen commitment schemes 
+description: An implementation of Pedersen commitment schemes
 maintainer: Adjoint Inc (info@adjoint.io)
 license: Apache
 github: adjoint-io/pedersen-commitment
-category: Development
+category: Cryptography
 extra-source-files:
   - README.md
 
