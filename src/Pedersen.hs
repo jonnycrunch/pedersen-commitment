@@ -66,7 +66,7 @@ import PrimeField
 
 data CommitParams = CommitParams
   { pedersenSPF :: SPF     -- ^ Safe prime field for pedersen commitment
-  , pedersenH   :: Integer -- ^ h = g^a mod p where a is random
+  , pedersenH   :: Integer -- ^ \(h = g^a \mod p\) where a is random
   }
 
 newtype Commitment = Commitment { unCommitment :: Integer }
@@ -74,7 +74,7 @@ newtype Commitment = Commitment { unCommitment :: Integer }
 
 data Reveal = Reveal
   { revealVal :: Integer -- ^ Original value comitted
-  , revealExp :: Integer -- ^ random exponent r, g^x * h^r
+  , revealExp :: Integer -- ^ random exponent r, \(g^x \cdot h^r\)
   }
 
 data Pedersen = Pedersen
@@ -83,7 +83,7 @@ data Pedersen = Pedersen
   }
 
 -- | Generates a Safe Prime Field (p,q,g) and a random value
--- `a in Zq` such that `g^a = h`, where g and h are the bases
+-- \(a \in Z_q\) such that \(g^a = h\), where g and h are the bases
 -- to be used in the pedersen commit function.
 setup :: MonadRandom m => Int -> m (Integer, CommitParams)
 setup nbits = do
@@ -94,8 +94,8 @@ setup nbits = do
     return (a,h)
   return (a, CommitParams spf h)
 
--- | Commit a value by generating a random number `r in Zq`
--- and computing `C(x) = g^x * h^r` where x is the value to commit
+-- | Commit a value by generating a random number \(r \in Z_q\)
+-- and computing \(C(x) = g^x \cdot h^r\) where x is the value to commit
 commit :: MonadRandom m => Integer -> CommitParams -> m Pedersen
 commit x (CommitParams spf h) = do
   (r,c) <- runSPFT spf $ do
@@ -106,7 +106,7 @@ commit x (CommitParams spf h) = do
 
 -- | Open the commit by supplying the value commited, `x`, the
 -- random value `r` and the pedersen bases `g` and `h`, and
--- verifying that `C(x) == g^x * h^r`
+-- verifying that \(C(x) \overset{!}{=} g^x * h^r\)
 open :: CommitParams -> Commitment -> Reveal -> Bool
 open (CommitParams spf h) (Commitment c) (Reveal x r) =
     resCommit == c
