@@ -1,6 +1,8 @@
--- This file has been generated from package.yaml by hpack version 0.19.3.
+-- This file has been generated from package.yaml by hpack version 0.20.0.
 --
 -- see: https://github.com/sol/hpack
+--
+-- hash: 6fe16c0a6f59e81a3862fad8d21699fd7ce0ed8629acef873cbc6198e34dfe25
 
 name:           pedersen-commitment
 version:        0.1.0
