@@ -10,7 +10,8 @@ dependencies:
     - sudo apt-get update -q
 
   override:
-    - stack build --fast --no-docker
+    - stack upgrade
+    - stack setup
 
 test:
   override:
