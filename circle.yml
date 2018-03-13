@@ -1,7 +1,7 @@
 dependencies:
   cache_directories:
     - "~/.stack"
-    - "/home/ubuntu/aml/.stack-work"
+    - "/home/ubuntu/pedersen-commitment/.stack-work"
   pre:
     - sudo apt-get install libleveldb-dev leveldb-doc
     - wget https://github.com/commercialhaskell/stack/releases/download/v1.6.5/stack-1.6.5-linux-x86_64.tar.gz -O /tmp/stack.tar.gz
