@@ -26,7 +26,7 @@ consists of a three stages:
 example :: IO Bool
 example = do
   -- Setup commitment parameters
-  (a, cp) <- setup 256 
+  (a, cp) <- setup 256
 
   -- Commit to the message using paramaters: Com(msg, cp)
   let msg = 0xCAFEBEEF
@@ -57,15 +57,15 @@ Commit(m0; r0) * Commit(m1; r1) = Commit(m0 + m1; r0 + r1)
 
 ### Pedersen Commitments (Elliptic Curves)
 
-A more efficient implementation of the Pedersen Commitment scheme arises from 
-Elliptic Curve Cryptography (ECC) which is based on the algebraic structure of 
+A more efficient implementation of the Pedersen Commitment scheme arises from
+Elliptic Curve Cryptography (ECC) which is based on the algebraic structure of
 elliptic curves over finite (prime) fields. Using ECC, the commitment scheme
-computations require fewer bits and as a result yields a much faster commitment 
-phase. 
+computations require fewer bits and as a result yields a much faster commitment
+phase.
 
-Given a secure elliptic curve (e.g. secp256k1), a Pedersen 
-commitment can be implemented using the same interface as usual but instead 
-of prime field modular exponentiation, EC point multiplication and addition 
+Given a secure elliptic curve (e.g. secp256k1), a Pedersen
+commitment can be implemented using the same interface as usual but instead
+of prime field modular exponentiation, EC point multiplication and addition
 are used. The use of EC Pedersen commitments is almost exactly the same as the
 general prime field implementation:
 
@@ -73,7 +73,7 @@ general prime field implementation:
 example :: IO Bool
 example = do
   -- Setup commitment parameters
-  (a, cp) <- ecSetup Nothing -- SECP256k1 is used by default 
+  (a, cp) <- ecSetup Nothing -- SECP256k1 is used by default
 
   -- Commit to the message using paramaters: Com(msg, cp)
   let msg = 0xCAFEBEEF
@@ -96,11 +96,27 @@ and given a scalar `n`:
 Commit(x,r) + n = Commit(x + n,r)
 ```
 
+### Vector Pedersen Commitments (Elliptic Curves)
+
+The Vector Pedersen Commitment is a more powerful variant of the previous Pedersen commitment. It commits to a vector **v** instead of a scalar. This extended form is defined as:
+
+ C' = rH + (v<sub>1</sub>G<sub>1</sub> + v<sub>2</sub>G<sub>2</sub> + ...  + v<sub>n</sub>G<sub>n</sub>)
+
+where v<sub>1</sub>, v<sub>2</sub>, ..., v<sub>n</sub> are scalars that multiply each point G<sub>1</sub>, G<sub>2</sub>, ..., G<sub>n</sub> respectively in the elliptic curve. It is the result of the dot product between two vectors **v** and **G** of arbitrary large number of elements. Each element G<sub>i</sub> is a NUMS ("Nothing Up My Sleeve") generator that can be created using a hash function H such that `H(encode(G) || i)` and a "coerce-hash-to-point" function to construct the point from the randomized hash value.
+
+The new commitment C' is still a point in the curve and a valid Pedersen commitment. It also holds the hiding and binding properties and the same additive homomorphic properties as the Pedersen Commitment:
+```
+Commit(v, r1) + Commit(w, r2) = Commit(w + v, r1 + r2)
+```
+```
+Commit(v, r) + w = Commit(v + w, r)
+```
+where v and w are now vectors.
 
 **References**:
 
-1. Pedersen, Torben Pryds. "Non-interactive and information-theoretic secure verifiable secret sharing." Annual International Cryptology Conference. Springer Berlin Heidelberg, 1991.  APA	
-2. Liskov, Moses, et al. "Mutually independent commitments." International Conference on the Theory and Application of Cryptology and Information Security. Springer Berlin Heidelberg, 2001.  APA	
+1. Pedersen, Torben Pryds. "Non-interactive and information-theoretic secure verifiable secret sharing." Annual International Cryptology Conference. Springer Berlin Heidelberg, 1991.  APA
+2. Liskov, Moses, et al. "Mutually independent commitments." International Conference on the Theory and Application of Cryptology and Information Security. Springer Berlin Heidelberg, 2001.  APA
 3. Blum, Manuel, and Silvio Micali. "How to generate cryptographically strong sequences of pseudorandom bits." SIAM journal on Computing 13.4 (1984): 850-864.
 
 Usage

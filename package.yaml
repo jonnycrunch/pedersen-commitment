@@ -1,6 +1,6 @@
-name: pedersen-commitment 
+name: pedersen-commitment
 version: 0.1.0
-synopsis: An implementation of Pedersen commitment schemes 
+synopsis: An implementation of Pedersen commitment schemes
 description: An implementation of Pedersen commitment schemes
 maintainer: Adjoint Inc (info@adjoint.io)
 license: Apache
@@ -32,7 +32,7 @@ dependencies:
   - text >= 1.2
   - bytestring >= 0.10
   - mtl >= 2.2
-  
+
   # Cryptograhy
   - cryptonite >= 0.21
   - memory >= 0.14
@@ -76,6 +76,7 @@ library:
   exposed-modules:
     - PrimeField
     - Pedersen
+    - VectorPedersen
     - MICP.Internal
     - MICP
 

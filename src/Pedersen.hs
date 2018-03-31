@@ -171,11 +171,11 @@ data ECPedersen = ECPedersen
   }
 
 -- | Setup EC Pedersen commit params, defaults to curve secp256k1
-ecSetup :: MonadRandom m => Maybe ECC.CurveName -> m (ECC.PrivateNumber, ECCommitParams)
+ecSetup :: MonadRandom m => Maybe ECC.CurveName -> m ECCommitParams
 ecSetup mCurveName = do
     a <- ECC.scalarGenerate curve
     let h = ECC.pointBaseMul curve a
-    return (a, ECCommitParams curve h)
+    return $ ECCommitParams curve h
   where
     curve = case mCurveName of
       Nothing -> secp256k1
