@@ -1,5 +1,5 @@
 name: pedersen-commitment
-version: 0.1.0
+version: 0.2.0
 synopsis: An implementation of Pedersen commitment schemes
 description: An implementation of Pedersen commitment schemes
 maintainer: Adjoint Inc (info@adjoint.io)
@@ -8,6 +8,7 @@ github: adjoint-io/pedersen-commitment
 category: Cryptography
 extra-source-files:
   - README.md
+  - ChangeLog.md
 
 flags:
   static:

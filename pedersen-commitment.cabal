@@ -2,10 +2,10 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 6fe16c0a6f59e81a3862fad8d21699fd7ce0ed8629acef873cbc6198e34dfe25
+-- hash: 0d94afba51f730390c01d67a52c514fcc3c566aeb2fabab3f8a4454a6dc9e40a
 
 name:           pedersen-commitment
-version:        0.1.0
+version:        0.2.0
 synopsis:       An implementation of Pedersen commitment schemes
 description:    An implementation of Pedersen commitment schemes
 category:       Cryptography
@@ -18,6 +18,7 @@ build-type:     Simple
 cabal-version:  >= 1.10
 
 extra-source-files:
+    ChangeLog.md
     README.md
 
 source-repository head
@@ -51,6 +52,7 @@ library
   exposed-modules:
       PrimeField
       Pedersen
+      VectorPedersen
       MICP.Internal
       MICP
   other-modules:
