@@ -2,17 +2,17 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: eeca26601b5d60ecabaf75ca0df968e81ff248de33a5b4b30d922e2cc11242d6
+-- hash: 791088eebb790d77e07818fdaa551d0927606369753e61d1c4aa6223f8ab6095
 
 name:           pedersen-commitment
 version:        0.2.0
 synopsis:       An implementation of Pedersen commitment schemes
-description:    An implementation of Pedersen commitment schemes
+description:    An implementation of Pedersen commitment schemes for multiparty protocols.
 category:       Cryptography
 homepage:       https://github.com/adjoint-io/pedersen-commitment#readme
 bug-reports:    https://github.com/adjoint-io/pedersen-commitment/issues
 maintainer:     Adjoint Inc (info@adjoint.io)
-license:        Apache
+license:        MIT
 license-file:   LICENSE
 build-type:     Simple
 cabal-version:  >= 1.10

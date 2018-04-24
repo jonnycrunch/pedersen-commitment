@@ -1,9 +1,9 @@
 name: pedersen-commitment
 version: 0.2.0
 synopsis: An implementation of Pedersen commitment schemes
-description: An implementation of Pedersen commitment schemes
+description: An implementation of Pedersen commitment schemes for multiparty protocols.
 maintainer: Adjoint Inc (info@adjoint.io)
-license: Apache
+license: MIT
 license-file: LICENSE
 github: adjoint-io/pedersen-commitment
 category: Cryptography
