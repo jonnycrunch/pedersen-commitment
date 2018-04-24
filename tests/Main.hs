@@ -23,11 +23,10 @@ import qualified VectorPedersen as VP
 suite :: TestTree
 suite = testGroup "Test Suite" [
     testGroup "Units"
-      [vectorPedersenTests]
-      -- [ pedersenTests
-      -- , micpTests
-      -- , vectorPedersenTests
-      -- ]
+      [ pedersenTests
+      , micpTests
+      , vectorPedersenTests
+      ]
   ]
 
 pedersenTests :: TestTree
