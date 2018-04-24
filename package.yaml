@@ -4,22 +4,12 @@ synopsis: An implementation of Pedersen commitment schemes
 description: An implementation of Pedersen commitment schemes
 maintainer: Adjoint Inc (info@adjoint.io)
 license: Apache
+license-file: LICENSE
 github: adjoint-io/pedersen-commitment
 category: Cryptography
 extra-source-files:
   - README.md
   - ChangeLog.md
-
-flags:
-  static:
-    description: Emit statically-linked binary
-    manual: False
-    default: False
-
-  optimized:
-    description: Perform compiler optimizations
-    manual: False
-    default: False
 
 dependencies:
   # Prelude

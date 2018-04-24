@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 0d94afba51f730390c01d67a52c514fcc3c566aeb2fabab3f8a4454a6dc9e40a
+-- hash: eeca26601b5d60ecabaf75ca0df968e81ff248de33a5b4b30d922e2cc11242d6
 
 name:           pedersen-commitment
 version:        0.2.0
@@ -24,16 +24,6 @@ extra-source-files:
 source-repository head
   type: git
   location: https://github.com/adjoint-io/pedersen-commitment
-
-flag optimized
-  description: Perform compiler optimizations
-  manual: False
-  default: False
-
-flag static
-  description: Emit statically-linked binary
-  manual: False
-  default: False
 
 library
   hs-source-dirs:
